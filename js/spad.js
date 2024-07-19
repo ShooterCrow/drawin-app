@@ -12,7 +12,7 @@ class Pad {
 
         this.addListeners()
         this.isDrawing = false;
-        this.path = []
+        this.paths = []
     }
 
     addListeners() {
@@ -20,16 +20,15 @@ class Pad {
         this.canvas.onmousedown = (e) => {
             const mouse = this.#mouseLocate(e)
             this.isDrawing = true
-            this.path = [mouse]
+            this.paths.push( [mouse] )
         }
 
         // Mouse move to this.isDrawing, only wjen isDrawin is on
         this.canvas.onmousemove = (e) => {
             if (!this.isDrawing) return
             const mouse = this.#mouseLocate(e)
-            this.isDrawing = true
-            this.path.push(mouse)
-
+            const lastP = this.paths[this.paths.length-1]
+            lastP.push(mouse)
             this.#redraw()
         }
 
@@ -45,7 +44,7 @@ class Pad {
             this.canvas.width,
             this.canvas.height)
 
-            draw.path(ctx,this.path)
+            draw.paths(this.ctx,this.paths)
     }
 
     #mouseLocate(e) {
