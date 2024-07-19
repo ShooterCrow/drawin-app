@@ -1,0 +1,19 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    font-family: poppins;
+    background-color: slateblue;
+}
+
+.padContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
