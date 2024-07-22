@@ -4,6 +4,7 @@
 body {
     font-family: poppins;
     background-color: slateblue;
+    overscroll-behavior: none;
 }
 
 .padContainer {
@@ -16,4 +17,12 @@ body {
 
 h1 {
     margin: 0;
+}
+
+#undo {
+    padding: 20px;
+}
+
+#undo:disabled {
+    cursor: not-allowed;
 }

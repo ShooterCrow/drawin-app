@@ -6,16 +6,38 @@ class Pad {
         this.canvas.style = `
         background-color:white;
         `;
+        this.undoBtn = document.createElement("button");
         container.appendChild(this.canvas)
+        this.undoBtn.innerText = "Undo"
+        this.undoBtn.setAttribute("id","undo");
+        container.appendChild(this.undoBtn)
+        this.input = document.querySelector("[input]")
+        this.submit = document.querySelector("[button]")
 
         this.ctx = this.canvas.getContext("2d")
 
-        this.addListeners()
         this.isDrawing = false;
         this.paths = []
+
+        this.#redraw()
+
+        this.color = "Blue"
+        this.addListeners()
     }
 
     addListeners() {
+        this.undoBtn.addEventListener("click", () => {
+            console.log(this.paths.length)
+            if (this.paths.length>0) {
+                this.paths.pop()
+                this.undoBtn.disabled = false
+                this.#redraw()
+            } else if (this.paths.length <= 1) {
+                alert("Notin to Undo")
+                this.undoBtn.disabled = true
+            }
+        })
+
         // Mouse click to start drawin
         this.canvas.onmousedown = (e) => {
             const mouse = this.#mouseLocate(e)
@@ -36,6 +58,37 @@ class Pad {
         this.canvas.onmouseup = () => {
             this.isDrawing = false
         }
+        
+        //Listeners for mobile devices
+        this.canvas.ontouchstart = (e) => {
+            const loc = e.touches[0]
+            this.canvas.onmousedown(loc)
+        }
+        this.canvas.ontouchmove = (e) => {
+            const loc = e.touches[0]
+            this.canvas.onmousemove(loc)
+        }
+        this.canvas.ontouchend = (e) => {
+            const loc = e.touches[0]
+            this.canvas.onmouseup(loc)
+        }
+
+        // Undo Button Functionality
+        this.undoBtn.onclick = () => {
+            this.paths.pop()
+            this.#redraw()
+        }
+
+
+
+
+
+        // Set Draw Colour
+        this.submit.onclick = (e) => {
+            if (!this.input.value) alert()
+            this.color = this.input.value
+            this.input.value=""
+        }
     }
 
     #redraw() {
@@ -44,7 +97,13 @@ class Pad {
             this.canvas.width,
             this.canvas.height)
 
-            draw.paths(this.ctx,this.paths)
+            draw.paths(this.ctx,this.paths, this.color)
+            if (this.paths.length>0) {
+                this.undoBtn.disabled = false
+            } else {
+                this.undoBtn.disabled = true
+            }
+            // this.paths.length>0 ? this.undoBtn.disabled = false : this.undoBtn.disabled = false
     }
 
     #mouseLocate(e) {
